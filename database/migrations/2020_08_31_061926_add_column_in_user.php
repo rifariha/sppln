@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTableUserLevel extends Migration
+class AddColumnInUser extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateTableUserLevel extends Migration
      */
     public function up()
     {
-        Schema::create('user_levels', function (Blueprint $table) {
-            $table->id();
-            $table->string('level');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->integer('level')->nullable()->after('password');
+            $table->boolean('status')->after('level')->default(true);
         });
     }
 
@@ -27,6 +26,8 @@ class CreateTableUserLevel extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_levels');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 }
