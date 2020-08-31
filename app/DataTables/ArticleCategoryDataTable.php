@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\users;
+use App\Models\ArticleCategory;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class UsersDataTable extends DataTable
+class ArticleCategoryDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,16 +18,16 @@ class UsersDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'users.datatables_actions');
+        return $dataTable->addColumn('action', 'article_categories.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\users $model
+     * @param \App\Models\ArticleCategory $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(users $model)
+    public function query(ArticleCategory $model)
     {
         return $model->newQuery();
     }
@@ -44,17 +44,9 @@ class UsersDataTable extends DataTable
             ->minifiedAjax()
             ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
-                'dom'       => 'Bfrtip',
                 'stateSave' => true,
                 'responsive' => true,
                 'order'     => [[0, 'desc']],
-                'buttons'   => [
-                    ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
-                ],
             ]);
     }
 
@@ -66,10 +58,7 @@ class UsersDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'name',
-            'email',
-            'email_verified_at',
-            'password',
+            'category_name',
         ];
     }
 
@@ -80,6 +69,6 @@ class UsersDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'users_datatable_' . time();
+        return 'article_categories_datatable_' . time();
     }
 }

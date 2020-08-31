@@ -13,17 +13,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
 
 Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->middleware('verified');
 
 Route::resource('users', 'usersController');
+
+Route::resource('articleCategories', 'ArticleCategoryController');
+
+Route::resource('articles', 'ArticleController');
+
+Route::post('articles/publish/{id}', 'ArticleController@publish')->name('articles.publish');
