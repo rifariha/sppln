@@ -11,7 +11,7 @@
         <div class="box box-primary">
             <div class="box-body">
                 <div class="row">
-                    {!! Form::open(['route' => 'dppDocuments.store']) !!}
+                    {!! Form::open(['route' => 'dppDocuments.store','files' => true,'enctype' => 'multipart/form-data']) !!}
 
                         @include('dpp_documents.fields')
 

@@ -25,7 +25,7 @@ class UpdateDppDocumentRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = DppDocument::$rules;
+        $rules = DppDocument::$editrules;
         
         return $rules;
     }

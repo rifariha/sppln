@@ -22,9 +22,6 @@ class DppDocument extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-
-
-
     public $fillable = [
         'name',
         'file',
@@ -52,8 +49,15 @@ class DppDocument extends Model
      */
     public static $rules = [
         'name' => 'required|string|max:255',
-        'file' => 'required|string|max:255',
-        'inputted_by' => 'required|string|max:255',
+        'file' => 'required|mimes:pdf',
+        'category' => 'required|string',
+        'created_at' => 'nullable',
+        'updated_at' => 'nullable'
+    ];
+
+    public static $editrules = [
+        'name' => 'required|string|max:255',
+        'file' => 'mimes:pdf',
         'category' => 'required|string',
         'created_at' => 'nullable',
         'updated_at' => 'nullable'

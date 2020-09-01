@@ -11,7 +11,7 @@
        <div class="box box-primary">
            <div class="box-body">
                <div class="row">
-                   {!! Form::model($dppDocument, ['route' => ['dppDocuments.update', $dppDocument->id], 'method' => 'patch']) !!}
+                   {!! Form::model($dppDocument, ['route' => ['dppDocuments.update', $dppDocument->id], 'method' => 'patch', 'files' => true,'enctype' => 'multipart/form-data']) !!}
 
                         @include('dpp_documents.fields')
 

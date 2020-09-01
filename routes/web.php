@@ -34,3 +34,4 @@ Route::resource('articles', 'ArticleController');
 Route::post('articles/publish/{id}', 'ArticleController@publish')->name('articles.publish');
 
 Route::resource('dppDocuments', 'DppDocumentController');
+Route::get('dppDocuments/document/uiksbu', 'DppDocumentController@uiksbu')->name('dppDocuments.uiksbu');

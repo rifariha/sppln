@@ -6,7 +6,7 @@ use App\Models\DppDocument;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class DppDocumentDataTable extends DataTable
+class DppDocumentUiksbuDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -36,7 +36,7 @@ class DppDocumentDataTable extends DataTable
      */
     public function query(DppDocument $model)
     {
-        $model = DppDocument::where(['category' => 'pln']);
+        $model = DppDocument::where(['category' => 'uiksbu']);
         return $model;
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\DppDocumentDataTable;
+use App\DataTables\DppDocumentUiksbuDataTable;
 use App\Http\Requests;
 use App\Http\Requests\CreateDppDocumentRequest;
 use App\Http\Requests\UpdateDppDocumentRequest;
@@ -10,6 +11,8 @@ use App\Repositories\DppDocumentRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class DppDocumentController extends AppBaseController
 {
@@ -32,6 +35,11 @@ class DppDocumentController extends AppBaseController
         return $dppDocumentDataTable->render('dpp_documents.index');
     }
 
+    public function uiksbu(DppDocumentUiksbuDataTable $dppDocumentUiksbuDataTable)
+    {
+        return $dppDocumentUiksbuDataTable->render('dpp_documents.index');
+    }
+
     /**
      * Show the form for creating a new DppDocument.
      *
@@ -52,11 +60,19 @@ class DppDocumentController extends AppBaseController
     public function store(CreateDppDocumentRequest $request)
     {
         $input = $request->all();
-
+        
+        if ($request->hasFile('file')) 
+        {
+            $file = $request->file;
+            $ext = $file->getClientOriginalExtension();
+            $path = $request->file('file')->storeAs('file', Str::slug($request->name) . '.' . $ext);
+            $input['file'] = $path;
+        }
+        
+        $input['inputted_by'] = Auth::user()->name;
         $dppDocument = $this->dppDocumentRepository->create($input);
 
-        Flash::success('Dpp Document saved successfully.');
-
+        Flash::success('Dokumen berhasil disimpan.');
         return redirect(route('dppDocuments.index'));
     }
 
@@ -72,8 +88,7 @@ class DppDocumentController extends AppBaseController
         $dppDocument = $this->dppDocumentRepository->find($id);
 
         if (empty($dppDocument)) {
-            Flash::error('Dpp Document not found');
-
+            Flash::error('Dokumen tidak ditemukan');
             return redirect(route('dppDocuments.index'));
         }
 
@@ -92,7 +107,7 @@ class DppDocumentController extends AppBaseController
         $dppDocument = $this->dppDocumentRepository->find($id);
 
         if (empty($dppDocument)) {
-            Flash::error('Dpp Document not found');
+            Flash::error('Dokumen tidak ditemukan');
 
             return redirect(route('dppDocuments.index'));
         }
@@ -112,15 +127,26 @@ class DppDocumentController extends AppBaseController
     {
         $dppDocument = $this->dppDocumentRepository->find($id);
 
-        if (empty($dppDocument)) {
-            Flash::error('Dpp Document not found');
+        $input = $request->all();
 
+        if (empty($dppDocument)) {
+            Flash::error('Dokumen tidak ditemukan');
             return redirect(route('dppDocuments.index'));
         }
 
-        $dppDocument = $this->dppDocumentRepository->update($request->all(), $id);
+        if ($request->hasFile('file'))
+        {
+            $file = $request->file;
+            $ext = $file->getClientOriginalExtension();
+            $path = $request->file('file')->storeAs('file', Str::slug($request->name) . '.' . $ext);
+            $input['file'] = $path;
+        }
+        
+        $input['inputted_by'] = Auth::user()->name;
+        // dd($input);
+        $dppDocument = $this->dppDocumentRepository->update($input, $id);
 
-        Flash::success('Dpp Document updated successfully.');
+        Flash::success('Dokumen berhasil diupdate');
 
         return redirect(route('dppDocuments.index'));
     }
@@ -137,14 +163,14 @@ class DppDocumentController extends AppBaseController
         $dppDocument = $this->dppDocumentRepository->find($id);
 
         if (empty($dppDocument)) {
-            Flash::error('Dpp Document not found');
+            Flash::error('Dokumen tidak ditemukan');
 
             return redirect(route('dppDocuments.index'));
         }
 
         $this->dppDocumentRepository->delete($id);
 
-        Flash::success('Dpp Document deleted successfully.');
+        Flash::success('Dokumen berhasil dihapus.');
 
         return redirect(route('dppDocuments.index'));
     }
