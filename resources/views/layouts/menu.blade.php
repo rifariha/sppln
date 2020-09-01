@@ -10,3 +10,7 @@
     <a href="{{ route('articles.index') }}"><i class="fa fa-edit"></i><span>Articles</span></a>
 </li>
 
+<li class="{{ Request::is('dppDocuments*') ? 'active' : '' }}">
+    <a href="{{ route('dppDocuments.index') }}"><i class="fa fa-edit"></i><span>Dpp Documents</span></a>
+</li>
+

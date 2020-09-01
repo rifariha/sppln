@@ -68,12 +68,6 @@ class ArticleController extends AppBaseController
             $thumbnailName = Str::slug($request->title) . '.' . $ext;
             $thumbnailPath = public_path('/thumbnail/' . $thumbnailName);
             $this->resize_crop_image(500, 500, $request->file('image'), $thumbnailPath);
-            
-            // $img = Image::make($request->file('image'));
-            // $img->crop(500, 500);
-            // $thumbnailPath = public_path('/thumbnail');
-            // $thumbnailName = Str::slug($request->title) . '.' . $ext;
-            // $img->save($thumbnailPath . '/' .$thumbnailName);
 
             $input['thumbnail'] = $thumbnailName;
             $input['image'] = $path;
@@ -124,8 +118,8 @@ class ArticleController extends AppBaseController
 
             return redirect(route('articles.index'));
         }
-
-        return view('articles.edit')->with('article', $article);
+        $category = ArticleCategory::pluck('category_name','id');
+        return view('articles.edit',compact(['article', 'category']));
     }
 
     /**
@@ -141,14 +135,39 @@ class ArticleController extends AppBaseController
         $article = $this->articleRepository->find($id);
 
         if (empty($article)) {
-            Flash::error('Article not found');
+            Flash::error('Artikel tidak ditemukan');
 
             return redirect(route('articles.index'));
         }
 
-        $article = $this->articleRepository->update($request->all(), $id);
+        $input = $request->all();
 
-        Flash::success('Article updated successfully.');
+        if ($request->hasFile('image')) {
+            $file = $request->image;
+            $ext = $file->getClientOriginalExtension();
+            
+            $path = $request->file('image')->storeAs('artikel', Str::slug($request->title) . '.' . $ext);
+            
+            //make thumbnail
+            $thumbnailName = Str::slug($request->title) . '.' . $ext;
+            $thumbnailPath = public_path('/thumbnail/' . $thumbnailName);
+            $this->resize_crop_image(500, 500, $request->file('image'), $thumbnailPath);
+
+            $input['thumbnail'] = $thumbnailName;
+            $input['image'] = $path;
+        }
+        
+        if(empty($request->image))
+        {
+            $input['image'] = $article->image;
+        }
+
+        $input['slug'] = Str::slug($request->title) . '-' . Str::random(5);
+        $input['created_by'] = Auth::user()->name;
+                
+        $article = $this->articleRepository->update($input, $id);
+
+        Flash::success('Artikel berhasil diupdate.');
 
         return redirect(route('articles.index'));
     }
@@ -165,14 +184,14 @@ class ArticleController extends AppBaseController
         $article = $this->articleRepository->find($id);
 
         if (empty($article)) {
-            Flash::error('Article not found');
+            Flash::error('Artikel tidak ditemukan');
 
             return redirect(route('articles.index'));
         }
 
         $this->articleRepository->delete($id);
 
-        Flash::success('Article deleted successfully.');
+        Flash::success('Artikel berhasil dihapus.');
 
         return redirect(route('articles.index'));
     }
@@ -186,10 +205,13 @@ class ArticleController extends AppBaseController
             return redirect(route('articles.index'));
         }
 
-        dd($article);
+        $change = $article->status == true ? false : true;
         
-        Flash::success('Article berhasil dipublish');
+        Article::where('id',$id)->update(['status' => $change]);
         
+        $change != false ? Flash::success('Article berhasil diunpublish') : Flash::success('Article berhasil dipublish'); 
+        
+        return redirect(route('articles.index'));
     }
 
     function resize_crop_image($max_width, $max_height, $source_file, $dst_dir, $quality = 80)

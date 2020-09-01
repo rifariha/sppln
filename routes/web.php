@@ -32,3 +32,5 @@ Route::resource('articleCategories', 'ArticleCategoryController');
 Route::resource('articles', 'ArticleController');
 
 Route::post('articles/publish/{id}', 'ArticleController@publish')->name('articles.publish');
+
+Route::resource('dppDocuments', 'DppDocumentController');

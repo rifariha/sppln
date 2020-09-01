@@ -30,10 +30,13 @@ class ArticleDataTable extends DataTable
         $dataTable->editColumn('status', function ($data) {
             $status = $data->status == 0 ? 'Unpublished' : 'Published';
             $color = $data->status == 0 ? 'btn-primary' : 'btn-success';
-
+            
             $link = "
-                    <Button type='submit' class='btn btn-sm $color'> $status </button>
-            ";
+            <form action=".route('articles.publish',$data->id)." method='post'>
+                <input type='hidden' name='_token' value=".csrf_token()."> 
+                <button type='submit' class='btn btn-sm $color'> $status </button>
+            </form>
+                    ";
             return $link;
         })->rawColumns(['status','image','article_category','action'])->make(true);
         

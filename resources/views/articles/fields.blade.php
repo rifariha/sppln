@@ -9,11 +9,15 @@
     {!! Form::label('contains', 'Isi:') !!}
     {!! Form::textarea('contains', null, ['class' => 'form-control']) !!}
 </div>
-
 <!-- Image Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('image', 'Image:') !!}
+    {!! Form::label('image', 'Gambar:') !!}
     {!! Form::file('image', null, ['class' => 'form-control']) !!}
+    <i class="red"> Maksimal 10 Mb </i>
+    @if(!empty($article->image))
+    <br>
+    <img src="{{ url('storage/'.$article->image) }}" width="50%">
+    @endif
 </div>
 <!-- Article Category Id Field -->
 

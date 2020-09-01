@@ -3,9 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Article;
+use App\Models\DppDocument;
 
-class UpdateArticleRequest extends FormRequest
+class CreateDppDocumentRequest extends FormRequest
 {
 
     /**
@@ -25,8 +25,6 @@ class UpdateArticleRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = Article::$editrules;
-        
-        return $rules;
+        return DppDocument::$rules;
     }
 }
